@@ -4,14 +4,16 @@ from uuid import uuid4
 from datetime import datetime
 from os import environ
 import models
+import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, String, Datetime
+from sqlalchemy import Column, String, DateTime
 
 Base = declarative_base()
 
+
 class BaseModel:
     """A base class for all hbnb models"""
-    p = 'HBNB_TYPE_STORAGE'     #A prompt for the environ
+    p = 'HBNB_TYPE_STORAGE'
     if p in environ.keys() and environ['HBNB_TYPE_STOTAGE'] == 'db':
         id = Column(
                 String(60),
@@ -26,7 +28,7 @@ class BaseModel:
         updated_at = Column(
                 Datetime,
                 nullable=false,
-                default=datetime,utcnow())
+                default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
         """Instatntiates a new model"""
@@ -78,6 +80,7 @@ class BaseModel:
         dictionary['created_at'] = self.created_at.isoformat()
         dictionary['updated_at'] = self.updated_at.isoformat()
         return dictionary
+
     def delete(self):
         '''Deletes the record and save'''
         from models import storage

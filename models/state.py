@@ -1,19 +1,23 @@
 #!/usr/bin/python3
 """ State Module for HBNB project """
-from models import *
+import models
+from models.base_model import Base
+from models.base_model import BaseModel
+from models.city import City
 from sqlalchemy import Column, String
 from sqlalchemy.orm import relationship, backref
 from os import getenv
+
 
 class State(BaseModel, Base):
     """ State class """
     __tablename__ = "states"
     name = Column(
             String(128),
-            nullable=false)
+            nullable=False)
     cities = relationship(
             'City',
-            backref='states'
+            backref='states',
             cascade='all, delete, delete-orphan')
 
     def __init__(self, *args, **kwargs):

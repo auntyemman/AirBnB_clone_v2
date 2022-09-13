@@ -11,19 +11,11 @@ if p in environ.keys() and environ["HBNB_TYPE_STORAGE"] == "db":
     class City(BaseModel, Base):
         """ The city class for the DBstoarge """
         __tablename__ = "cities"
-        name = Column(
-                String(128),
-                nullable=false)
-        state_id = Column(
-                String(60),
-                nullable=false,
-                ForeignKey('states.id'))
+        name = Column(String(128), nullable=False)
+        state_id = Column(String(60), ForeignKey('states.id'), nullable=False)
+        places = relationship("Place", backref="cities", cascade="all,delete")
 
-        places = relationship("Place", 
-                backref="cities", 
-                cascade="all,delete")
-
-          def __init__(self, **kwargs):
+        def __init__(self, **kwargs):
             setattr(self, "id", str(uuid4()))
             for i, j in kwargs.items():
                 setattr(self, i, j)

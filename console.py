@@ -72,8 +72,8 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     try:
                         value = eval(value)
-                    except(SyntaxError):
-                            continue
+                    except (SyntaxError):
+                        continue
                 kwargs[key] = value
 
         if kwargs == {}:
@@ -145,7 +145,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
