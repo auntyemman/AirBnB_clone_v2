@@ -13,25 +13,12 @@ Base = declarative_base()
 
 class BaseModel:
     """A base class for all hbnb models"""
-    p = 'HBNB_TYPE_STORAGE'
-    if p in environ.keys() and environ['HBNB_TYPE_STOTAGE'] == 'db':
-        id = Column(
-                String(60),
-                unique=true,
-                nullable=false,
-                primary_key=true,
-                default=str(uuid.uuid4()))
-        created_at = Column(
-                Datetime,
-                nullable=false,
-                default=datetime.utcnow())
-        updated_at = Column(
-                Datetime,
-                nullable=false,
-                default=datetime.utcnow())
+    id = Column(String(60), nullable=False, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow())
+    updated_at = Column(DateTime, nullable=False, default=datetime.utcnow())
 
     def __init__(self, *args, **kwargs):
-        """Instatntiates a new model"""
+        """Instantiates a new model"""
         self.id = str(uuid4())
         self.created_at = self.updated_at = datetime.utcnow()
         if kwargs:

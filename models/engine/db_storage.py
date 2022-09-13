@@ -4,6 +4,7 @@
 from os import environ
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.orm.scoping import scoped_session
+from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
 from models import *
 
@@ -66,8 +67,7 @@ class DBStorage:
 
     def delete(self, obj=None):
         if obj is None:
-            return
-
+            return False
         self.__session.delete(obj)
 
     def close(self):
