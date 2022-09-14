@@ -47,7 +47,7 @@ class FileStorage:
                 for value in json_dict.values():
                     cls = value['__class__']
                     self.new(eval('{}({})'.format(cls, '**value')))
-        except(FileNotFoundError):
+        except (FileNotFoundError):
             pass
 
     def delete(self, obj=None):
@@ -57,5 +57,5 @@ class FileStorage:
                 key = obj.__class__.__name__ + "." + obj.id
                 if key in self.__objects:
                     del self.__objects[key]
-            except(KeyError):
+            except (KeyError):
                 pass

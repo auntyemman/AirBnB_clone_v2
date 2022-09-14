@@ -15,6 +15,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
 
+
 class DBStorage:
     """Class for DBStorage engine"""
 
@@ -24,11 +25,11 @@ class DBStorage:
     def __init__(self):
         """Initialisation of DBStorage engine"""
         self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".
-                                        format(getenv("HBNB_MYSQL_USER"),
-                                               getenv("HBNB_MYSQL_PWD"),
-                                               getenv("HBNB_MYSQL_HOST"),
-                                               getenv("HBNB_MYSQL_DB")),
-                                        pool_pre_ping=True)
+                                      format(getenv("HBNB_MYSQL_USER"),
+                                             getenv("HBNB_MYSQL_PWD"),
+                                             getenv("HBNB_MYSQL_HOST"),
+                                             getenv("HBNB_MYSQL_DB")),
+                                      pool_pre_ping=True)
         if getenv("HBNB_ENV") == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -37,11 +38,15 @@ class DBStorage:
         new_dict = {}
         if cls is None:
             objs = self.__session.query(State).all()
-            objs = self.__session.query(City).all()
-            objs = self.__session.query(User).all()
-            objs = self.__session.query(Place).all()
-            objs = self.__session.query(Review).all()
-            objs = self.__session.query(Amenity).all()
+            objs.extend(self.__session.query(City).all())
+            objs.extend(self.__session.query(User).all())
+            objs.extend(self.__session.query(Place).all())
+            objs.extend(self.__session.query(Review).all())
+            objs.extend(self.__session.query(Amenity).all())
+        else:
+            if isinstance(cls, str):
+                cls = eval(cls)
+            objs = self.__session.query(cls)
             for o in objs:
                 key = o.__class__.__name__ + '.' + o.id
                 new_dict[key] = o
@@ -69,5 +74,4 @@ class DBStorage:
 
     def close(self):
         """to close current database session"""
-        self.__
-        self.__session.close()       
+        self.__session.close()
