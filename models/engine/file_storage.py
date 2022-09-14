@@ -18,11 +18,9 @@ class FileStorage:
     def all(self, cls=None):
         """returns the dictionary __objects"""
         if cls is not None:
-            if type(cls) == str:
-                cls = eval(cls)
             new_dict = {}
             for key, value in self.__objects.items():
-                if type(value) == cls:
+                if cls == value.__class__ or cls == value.__class__.__name__:
                     new_dict[key] = value
             return new_dict
         return self.__objects
@@ -33,11 +31,12 @@ class FileStorage:
             self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
 
     def save(self):
-        """Serialises object to the JSON file __file_path"""
-        json_temp = {}
-        for key in self.__objects:
-            json_temp[key] = self.__objects[key].to_dict()
-        with open(self.__file_path, 'w', encoding='utf-8') as f:
+        """Serialises __objects to the JSON file path"""
+        with open(self.__file_path, 'w') as f:
+            json_temp = {}
+            json_temp.update(self.__objects)
+            for key, val in json_temp.items():
+                json_temp[key] = val.to_dict()
             json.dump(json_temp, f)
 
     def reload(self):
@@ -47,9 +46,8 @@ class FileStorage:
                 json_dict = json.load(f)
                 for value in json_dict.values():
                     cls = value['__class__']
-                    del value['__class__']
                     self.new(eval('{}({})'.format(cls, '**value')))
-        except(FileNotFoundError):
+        except (FileNotFoundError):
             pass
 
     def delete(self, obj=None):
@@ -59,9 +57,5 @@ class FileStorage:
                 key = obj.__class__.__name__ + "." + obj.id
                 if key in self.__objects:
                     del self.__objects[key]
-            except(KeyError):
+            except (KeyError):
                 pass
-
-    def close(self):
-        """call reload() method for deserializing the JSON file to objects"""
-        self.reload()
