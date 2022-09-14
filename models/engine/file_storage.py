@@ -31,13 +31,13 @@ class FileStorage:
             self.__objects["{}.{}".format(type(obj).__name__, obj.id)] = obj
 
     def save(self):
-        """Saves storage dictionary to file"""
-        with open(FileStorage.__file_path, 'w') as f:
-            temp = {}
-            temp.update(FileStorage.__objects)
-            for key, val in temp.items():
-                temp[key] = val.to_dict()
-            json.dump(temp, f)
+        """Serialises __objects to the JSON file path"""
+        with open(self.__file_path, 'w') as f:
+            json_temp = {}
+            json_temp.update(self.__objects)
+            for key, val in json_temp.items():
+                json_temp[key] = val.to_dict()
+            json.dump(json_temp, f)
 
     def reload(self):
         """Deserialise json file to __objects, if it exists"""

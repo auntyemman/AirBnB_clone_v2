@@ -4,9 +4,7 @@ from uuid import uuid4
 from datetime import datetime
 import models
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column
-from sqlalchemy import DateTime
-from sqlalchemy import String
+from sqlalchemy import Column, DateTime, String
 
 Base = declarative_base()
 
@@ -23,16 +21,17 @@ class BaseModel:
         self.created_at = self.updated_at = datetime.utcnow()
         if kwargs:
             for name, value in kwargs.items():
-                if name != '__class__':
                     if name == 'created_at' or name == 'updated_at':
                         value = datetime.strptime(
                                 value, "%Y-%m-%dT%H:%M:%S.%f")
+                    if name != "__class__":
                         setattr(self, name, value)
 
     def __str__(self):
         """Returns a string representation of the instance"""
-        cls = (str(type(self)).split('.')[-1]).split('\'')[0]
-        return '[{}] ({}) {}'.format(cls, self.id, self.__dict__)
+        my_dict = self.__dict__.copy()
+        my_dict.pop("_sa_instance_state", None)
+        return '[{}] ({}) {}'.format(type(self).__name__, self.id, my_dict)
 
     def save(self):
         """Updates updated_at with current time when instance is changed"""
@@ -42,15 +41,13 @@ class BaseModel:
 
     def to_dict(self):
         """Convert instance into dict format"""
-        dictionary = {}
-        dictionary.update(self.__dict__)
-        dictionary.update({'__class__':
-                          (str(type(self)).split('.')[-1]).split('\'')[0]})
-        dictionary['created_at'] = self.created_at.isoformat()
-        dictionary['updated_at'] = self.updated_at.isoformat()
-        if "_sa_instance_state" in dictionary:
-            del dictionary["_sa_instance_state"]
-        return dictionary
+        m_dict = {}
+        m_dict.update(self.__dict__)
+        m_dict.update({'__class__': (str(type(self)).split('.')[-1]).split('\'')[0]})
+        m_dict['created_at'] = self.created_at.isoformat()
+        m_dict['updated_at'] = self.updated_at.isoformat()
+        m_dict.pop("_sa_instance_state", None)
+        return m_dict
 
     def delete(self):
         """Deletes the current instance from storage"""
