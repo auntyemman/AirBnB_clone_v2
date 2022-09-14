@@ -80,7 +80,6 @@ class HBNBCommand(cmd.Cmd):
             new_instance = eval(arg_split[0])()
         else:
             new_instance = eval(arg_split[0])(**kwargs)
-            storage.new(new_instance)
         print(new_instance.id)
         new_instance.save()
 
@@ -158,20 +157,19 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, args):
         """ Shows all objects, or all objects of a class"""
         print_list = []
-
-        if args:
-            args = args.split(' ')[0]  # remove possible trailing args
-            if args not in HBNBCommand.classes:
-                print("** class doesn't exist **")
-                return
-            for k, v in storage._FileStorage__objects.items():
-                if k.split('.')[0] == args:
-                    print_list.append(str(v))
+        arg_tok = args.split(' ')
+        if len(arg_tok) == 0:
+            new_dict = models.storage.all()
+        elif arg_tok[0] in HBNBCommand.classes:
+            new_dict = models.storage.all(HBNBCommand.classes[arg_tok[0]])
         else:
-            for k, v in storage._FileStorage__objects.items():
-                print_list.append(str(v))
-
-        print(print_list)
+            print("** class doesn't exist **")
+            return False
+        for key in new_dict:
+            print_list.append(str(new_dict[key]))
+        print("[", end="")
+        print(", ".join(print_list), end="")
+        print("]")
 
     def help_all(self):
         """ Help information for the all command """

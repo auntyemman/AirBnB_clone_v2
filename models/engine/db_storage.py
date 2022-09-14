@@ -9,6 +9,7 @@ from models.place import Place
 from models.review import Review
 from models.state import State
 from models.user import User
+import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import scoped_session
@@ -33,20 +34,17 @@ class DBStorage:
 
     def all(self, cls=None):
         """Query on current database session"""
+        new_dict = {}
         if cls is None:
             objs = self.__session.query(State).all()
-            objs.extend(self.__session.query(City).all())
-            objs.extend(self.__session.query(User).all())
-            objs.extend(self.__session.query(Place).all())
-            objs.extend(self.__session.query(Review).all())
-            objs.extend(self.__session.query(Amenity).all())
-        else:
-            if isinstance(cls, str):
-                cls = eval(cls)
-            objs = self.__session.query(cls)
-        for o in objs:
-            key = o.__class__.__name__ + '.' + o.id
-            new_dict[key] = o
+            objs = self.__session.query(City).all()
+            objs = self.__session.query(User).all()
+            objs = self.__session.query(Place).all()
+            objs = self.__session.query(Review).all()
+            objs = self.__session.query(Amenity).all()
+            for o in objs:
+                key = o.__class__.__name__ + '.' + o.id
+                new_dict[key] = o
         return (new_dict)
 
     def new(self, obj):
@@ -67,8 +65,9 @@ class DBStorage:
         Base.metadata.create_all(self.__engine)
         sess_factory = sessionmaker(bind=self.__engine, expire_on_commit=False)
         Session = scoped_session(sess_factory)
-        self.__session = Session
+        self.__session = Session()
 
     def close(self):
         """to close current database session"""
-        self.__session.close()
+        self.__
+        self.__session.close()       
