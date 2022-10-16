@@ -23,7 +23,7 @@ def display_variable(text):
     return 'C ' + new_text
 
 
-@app.route('/python', strict_slashes=False)
+
 @app.route('/python/<text>', strict_slashes=False)
 def default_variable(text):
     """Prints a message when /python is called"""
