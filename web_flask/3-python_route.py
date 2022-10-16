@@ -23,16 +23,11 @@ def display_variable(text):
     return 'C ' + new_text
 
 
-
+@app.route('/python', strict_slashes=False)
 @app.route('/python/<text>', strict_slashes=False)
-def default_variable(text):
-    """Prints a message when /python is called"""
-    if text:
-        new_text = text.replace('_', ' ')
-        return 'Python ' + new_text
-    else:
-        return 'Python is cool'
-
+def python_is_cool(text='is_cool'):
+    """ Prints a Message when /python is called """
+    return "Python " + text.replace('_', ' ')
 
 if __name__ == "__main__":
     """ Main Function """
