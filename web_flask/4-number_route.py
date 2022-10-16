@@ -32,8 +32,8 @@ def python_is_cool(text='is_cool'):
 
 @app.route('/number/<int:n>', strict_slashes=False)
 def number_variable(n):
-    """Prints a number when /number is called"""
-    return n
+    """Prints an integer number when /number is called"""
+    return "{} is a number".format(n)
 
 if __name__ == "__main__":
     """ Main Function """
