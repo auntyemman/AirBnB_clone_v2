@@ -59,3 +59,11 @@ class FileStorage:
                     del self.__objects[key]
             except (KeyError):
                 pass
+
+     def close(self):
+        """call reload() method for deserializing the JSON file to objects"""
+        self.reload()
+
+    def close(self):
+        """call remove() method for deserializing the JSON file to objects"""
+        self.remove()
